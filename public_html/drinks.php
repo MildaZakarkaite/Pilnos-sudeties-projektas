@@ -1,86 +1,63 @@
 <?php
 
-require('../bootloader.php');
+require '../bootloader.php';
+
 $form = [
-    'attr' => [],
     'fields' => [
-        'name' => [
-            'type' => 'text',
-			'label' => 'Drink name:',
-			'extra' => [
-				'attr' => [
-					'placeholder' => 'Pavadinimas',
-				],
-			],
-            'validators' => [
-                'validate_not_empty',
-            ],
-        ],
-        'amount_ml' => [
-            'type' => 'number',
-			'label' => 'Amount in ml:',
-            'extra' => [
-				'attr' => [
-					'placeholder' => 'Talpa',
-				],
-			],
-            'validators' => [
-                'validate_not_empty',
-            ],
-        ],
-        'abarot' => [
-            'type' => 'number',
-			'label' => 'Abarot:',
-			'extra' => [
-				'attr' => [
-					'placeholder' => 'Laipsniai',
-				],
-			],
-            'validators' => [
-                'validate_not_empty',
-            ],
-        ],
-        'image' => [
-            'type' => 'url',
-			'label' => 'Image URL:',
-			'extra' => [
-				'attr' => [
-					'placeholder' => 'Paveikslelio nuoroda',
-				],
-			],
-            'validators' => [
-                'validate_not_empty',
-            ],
-        ],
+        'selector' => [
+			'type' => 'select',
+			'label' => 'Drink!',
+			'options' => options(),
+		],
     ],
     'buttons' => [
-        'insert' => [
+        'drink' => [
             'type' => 'submit',
         ],
-        'delete' => [
+        'delete all' => [
             'type' => 'submit',
-        ],
-    ],
-    'validators' => [
+        ]
     ],
     'callbacks' => [
         'success' => 'form_success',
         'fail' => 'form_fail',
     ],
 ];
+
+function options() {
+	$drinks = [];
+	$modelDrinks = new \App\Drinks\Model();
+	
+	foreach ($modelDrinks->get() as $drink) {
+		$drinks[$drink->getID()] = $drink->getName();
+	}
+	
+	return $drinks;
+}
+
 function form_success($filtered_input, &$form) {
     $modelDrinks = new \App\Drinks\Model();
-	var_dump($filtered_input);
-    $drink = new \App\Drinks\Drink($filtered_input);
-    $modelDrinks->insert($drink);
+
+	// Masyvas Drink klases objektu
+	$drinks = $modelDrinks->get();
+	$drink = $drinks[$filtered_input['selector']];
+	$drink->drink();
+	$modelDrinks->update($drink);
 }
+
 function form_fail($filtered_input, &$form) {
+	print 'form fail';
 }
-$modelDrinks = new \App\Drinks\Model();
+
+
+
 $filtered_input = get_filtered_input($form);
 $button = get_form_action();
+
+$modelDrinks = new \App\Drinks\Model();
+
 switch ($button) {
-	case 'insert':
+	case 'drink':
 		if (!empty($filtered_input)) {
 			validate_form($filtered_input, $form);
 		}
@@ -89,6 +66,7 @@ switch ($button) {
 		$modelDrinks->deleteAll();
 		break;
 }
+
 ?>
 <html>
     <head>
@@ -96,9 +74,12 @@ switch ($button) {
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>OOP</title>
 		<link rel="stylesheet" href="css/style.css">
-                <script defer src="js/app.js"></script>
+		<script defer src="js/app.js"></script>
 	</head>
 	<body>
+		<div class="form-container">
+			<?php require ROOT . '/core/templates/form.tpl.php'; ?>
+		</div>
 		<div class="catalogue">
 			<?php foreach ($modelDrinks->get() as $drink): ?>
 				<div class="bottle">
