@@ -9,6 +9,14 @@ $duomenys1 = [
  
 ];
 
+$duomenys3 = [
+    'name' => 'Degtinė',
+    'abarot' => 50,
+    'amount_ml' => 450,
+ 
+];
+
+
 $duomenys2 = [
     'name' => 'Šampanas',
     'abarot' => 15,
