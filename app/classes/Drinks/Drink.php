@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Drinks;
+
 class Drink {
 	/**
 	 * @var array
 	 */
-	private $data = [];
+	protected $data = [];
 	public function __construct(array $data = null) {
 		if ($data) {
 			$this->setData($data);
@@ -48,25 +50,25 @@ class Drink {
 	}
 	/**
 	 * Sets ID
-	 * @param int $id
+	 * @param int|null $id
 	 */
-	public function setID(int $id) {
+	public function setID(?int $id) {
 		$this->data['id'] = $id;
 	}
 	
 	/**
 	 * Set data name
-	 * @param string $name
+	 * @param string|null $name
 	 */
-	public function setName(string $name) {
+	public function setName(?string $name) {
 		$this->data['name'] = $name;
 	}
 	
 	/**
 	 * Set data amount
-	 * @param int $amount
+	 * @param int|null $amount
 	 */
-	public function setAmount(int $amount) {
+	public function setAmount(?int $amount) {
 		if ($amount >= 0) {
 			$this->data['amount_ml'] = $amount;
 		} else {
@@ -76,17 +78,17 @@ class Drink {
 	
 	/**
 	 * Set data abarot
-	 * @param float $abarot
+	 * @param float|null $abarot
 	 */
-	public function setAbarot(float $abarot) {
+	public function setAbarot(?float $abarot) {
 		$this->data['abarot'] = $abarot;
 	}
 	
 	/**
 	 * Set data image
-	 * @param string $image
+	 * @param string|null $image
 	 */
-	public function setImage(string $image) {
+	public function setImage(?string $image) {
 		$this->data['image'] = $image;
 	}
 	
